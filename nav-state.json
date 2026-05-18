@@ -1,33 +1,315 @@
 {
   "nh_del_cards": [
-    "suno",
+    "qianwen",
+    "perplexity",
     "midjourney",
+    "suno",
+    "chatgpt",
+    "deepseek",
+    "kimi",
+    "claude",
+    "gemini",
+    "doubao",
+    "grok",
     "wenxin",
-    "kimi"
+    "s360",
+    "yahoo",
+    "baidu",
+    "duckduckgo",
+    "bing",
+    "google",
+    "gtranslate",
+    "deepl",
+    "overleaf",
+    "smallpdf",
+    "excalidraw",
+    "arxiv",
+    "gscholar",
+    "cnki",
+    "wanfang",
+    "semantic",
+    "pubmed",
+    "scidir",
+    "rgate",
+    "stackoverflow",
+    "mdn",
+    "codepen",
+    "postman",
+    "gitee",
+    "regex101",
+    "unsplash",
+    "iconfont",
+    "coolors",
+    "gfonts"
   ],
-  "nh_custom_cards": [],
-  "nh_del_secs": [],
-  "nh_custom_secs": [],
-  "nh_del_qls": [],
+  "nh_custom_cards": [
+    {
+      "id": "c_1779086971953",
+      "section": "ai",
+      "name": "Chatgpt",
+      "url": "https://chatgpt.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-green",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/chatgpt.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087081693",
+      "section": "sec_1779087017146",
+      "name": "Deepseek api",
+      "url": "https://platform.deepseek.com/usage",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/platform.deepseek.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087166414",
+      "section": "sec_1779087138477",
+      "name": "推特",
+      "url": "https://x.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/x.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087300334",
+      "section": "ai",
+      "name": "Claude",
+      "url": "https://claude.ai/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/claude.ai.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087472674",
+      "section": "ai",
+      "name": "Gemini",
+      "url": "https://gemini.google.com/app",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/gemini.google.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087498546",
+      "section": "ai",
+      "name": "Grok",
+      "url": "https://grok.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/grok.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087601034",
+      "section": "sec_1779087554670",
+      "name": "Deepseek",
+      "url": "https://chat.deepseek.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/chat.deepseek.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087624462",
+      "section": "sec_1779087554670",
+      "name": "Kimi",
+      "url": "https://www.kimi.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.kimi.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087678374",
+      "section": "sec_1779087554670",
+      "name": "豆包",
+      "url": "https://www.doubao.com/chat/?from_login=1",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.doubao.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087749142",
+      "section": "sec_1779087554670",
+      "name": "千问",
+      "url": "https://www.qianwen.com/chat?st=null&bizPassParams=%26x-platform%3DexternalH5",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.qianwen.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087868126",
+      "section": "academic",
+      "name": "Z图书馆",
+      "url": "https://zh.z-library.sk/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/zh.z-library.sk.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779087891659",
+      "section": "academic",
+      "name": "科研通",
+      "url": "https://www.ablesci.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.ablesci.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779088088203",
+      "section": "sec_1779087138477",
+      "name": "知乎",
+      "url": "https://www.zhihu.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.zhihu.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779088238995",
+      "section": "sec_1779087554670",
+      "name": "Minimax",
+      "url": "https://agent.minimaxi.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/agent.minimaxi.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779088349502",
+      "section": "sec_1779087554670",
+      "name": "清言",
+      "url": "https://chatglm.cn/main/alltoolsdetail?lang=zh",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/chatglm.cn.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779088641939",
+      "section": "sec_1779087017146",
+      "name": "MinerU",
+      "url": "https://mineru.net/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/mineru.net.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779088737931",
+      "section": "ai",
+      "name": "Perplexity",
+      "url": "https://www.perplexity.ai/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.perplexity.ai.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779089006948",
+      "section": "dev",
+      "name": "OPENAI开发平台",
+      "url": "https://platform.openai.com/settings/organization/billing/overview",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/platform.openai.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779089802297",
+      "section": "sec_1779087017146",
+      "name": "Minimax API",
+      "url": "https://platform.minimaxi.com/subscribe/token-plan?tab=individual__monthly",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/platform.minimaxi.com.ico",
+      "isCustom": true
+    },
+    {
+      "id": "c_1779089991356",
+      "section": "sec_1779087017146",
+      "name": "KIMI API",
+      "url": "https://platform.moonshot.cn/console/auth",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/platform.moonshot.cn.ico",
+      "isCustom": true
+    }
+  ],
+  "nh_del_secs": [
+    "search",
+    "tools",
+    "design"
+  ],
+  "nh_custom_secs": [
+    {
+      "id": "sec_1779087017146",
+      "label": "API调用",
+      "icon": "🔧",
+      "isCustom": true
+    },
+    {
+      "id": "sec_1779087138477",
+      "label": "社交媒体",
+      "icon": "🌍",
+      "isCustom": true
+    },
+    {
+      "id": "sec_1779087554670",
+      "label": "AI工具国内",
+      "icon": "📌",
+      "isCustom": true
+    }
+  ],
+  "nh_del_qls": [
+    "ql-canva",
+    "ql-arxiv",
+    "ql-so",
+    "ql-figma",
+    "ql-gtrans",
+    "ql-github"
+  ],
   "nh_custom_qls": [],
   "nh_sec_order": [
     "ai",
-    "ai-cn",
-    "academic",
+    "sec_1779087554670",
+    "sec_1779087017146",
     "dev",
-    "api",
-    "social"
+    "academic",
+    "sec_1779087138477"
   ],
   "nh_card_orders": {
-    "ai": [
-      "chatgpt",
-      "claude",
-      "gemini",
-      "doubao",
-      "grok",
-      "qianwen",
-      "perplexity",
-      "deepseek"
+    "academic": [
+      "c_1779087891659",
+      "c_1779087868126"
     ]
   },
   "nh_ql_order": [
@@ -35,11 +317,11 @@
     "ql-deepseek",
     "ql-kimi",
     "ql-github",
-    "ql-figma",
     "ql-gtrans",
+    "ql-figma",
     "ql-so",
+    "ql-notion",
     "ql-arxiv",
-    "ql-canva",
-    "ql-notion"
+    "ql-canva"
   ]
 }
