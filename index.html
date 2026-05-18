@@ -33,6 +33,12 @@
       background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
       color: #fff; padding: 3px 14px; border-radius: 14px; cursor: pointer; font-size: 13px;
     }
+    .btn-gh-sync {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+      color: #fff; padding: 3px 12px; border-radius: 14px; cursor: pointer; font-size: 13px;
+    }
+    .btn-gh-sync:hover { background: rgba(255,255,255,0.28); }
+    #syncStatus { font-size: 12px; min-width: 56px; text-align: right; transition: color .3s; }
 
     /* ── 快捷条 ── */
     .quickbar {
@@ -126,13 +132,6 @@
       transition: color .15s, background .15s; border: none; background: none; width: 100%;
     }
     .btn-add-section:hover { color: #1a6fc4; background: #f0f4ff; }
-    .sidebar-footer { padding: 10px 12px; border-top: 1px solid #f0f0f0; margin-top: 4px; }
-    .btn-reset {
-      width: 100%; padding: 6px 0; font-size: 12px; color: #999;
-      background: none; border: 1px dashed #d0d0d0; border-radius: 6px;
-      cursor: pointer; transition: all .2s;
-    }
-    .btn-reset:hover { color: #e55; border-color: #e55; background: #fff5f5; }
 
     /* ── 内容区 ── */
     .content { flex: 1; overflow-y: auto; padding: 20px 24px; min-width: 0; }
@@ -269,8 +268,8 @@
     <div class="logo">导航聚合 <span>NavHub</span></div>
     <nav id="topnav"></nav>
     <div class="user-area">
-      <span>🌐 中文</span>
-      <button class="btn-login">登录</button>
+      <span id="syncStatus"></span>
+      <button class="btn-gh-sync" onclick="openGhSettings()">⚙ 同步设置</button>
     </div>
   </div>
   <div class="quickbar" id="quickbar"></div>
@@ -377,80 +376,95 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- GitHub 同步设置 -->
+<div class="modal-overlay" id="ghSettingsOverlay">
+  <div class="modal" style="width:420px">
+    <h3>⚙️ GitHub 自动同步设置</h3>
+    <div class="form-inline">
+      <div class="form-row">
+        <label>GitHub 用户名 *</label>
+        <input id="gh-owner" type="text" placeholder="如：zhangsan">
+      </div>
+      <div class="form-row">
+        <label>仓库名 *</label>
+        <input id="gh-repo" type="text" placeholder="如：my-nav">
+      </div>
+    </div>
+    <div class="form-inline">
+      <div class="form-row">
+        <label>分支</label>
+        <input id="gh-branch" type="text" placeholder="main">
+      </div>
+      <div class="form-row">
+        <label>状态文件路径</label>
+        <input id="gh-path" type="text" placeholder="nav-state.json">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Personal Access Token *</label>
+      <input id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxx">
+    </div>
+    <div style="font-size:12px;color:#999;margin-bottom:14px;line-height:1.7">
+      Token 需要 <b style="color:#555">Contents: Read & Write</b> 权限。<br>
+      GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('ghSettingsOverlay')">取消</button>
+      <button class="btn-confirm" onclick="saveGhSettingsForm()">保存并立即同步</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════
 //  静态数据
 // ═══════════════════════════════════════════════════
 
 const BUILT_IN_SECTIONS = [
-  { id:'ai',       label:'AI 工具',  icon:'🤖' },
-  { id:'search',   label:'搜索引擎', icon:'🔍' },
-  { id:'academic', label:'学术资源', icon:'📚' },
-  { id:'dev',      label:'开发工具', icon:'💻' },
-  { id:'design',   label:'设计素材', icon:'🎨' },
-  { id:'tools',    label:'效率工具', icon:'🛠️' },
+  { id:'ai',       label:'AI 工具',    icon:'🤖' },
+  { id:'ai-cn',    label:'AI工具国内', icon:'🏠' },
+  { id:'api',      label:'API应用',    icon:'⚙️' },
+  { id:'dev',      label:'开发工具',   icon:'💻' },
+  { id:'academic', label:'学术资源',   icon:'📚' },
+  { id:'social',   label:'社交媒体',   icon:'🌍' },
 ];
 
 const BUILT_IN_QUICKLINKS = [
-  { id:'ql-chatgpt',  name:'ChatGPT',       url:'https://chat.openai.com',      color:'#10a37f' },
-  { id:'ql-deepseek', name:'DeepSeek',       url:'https://www.deepseek.com',     color:'#4f8ef7' },
-  { id:'ql-kimi',     name:'Kimi',           url:'https://kimi.moonshot.cn',     color:'#6366f1' },
-  { id:'ql-github',   name:'GitHub',         url:'https://github.com',           color:'#333'    },
-  { id:'ql-gtrans',   name:'谷歌翻译',       url:'https://translate.google.com', color:'#4285f4' },
-  { id:'ql-figma',    name:'Figma',          url:'https://www.figma.com',        color:'#f24e1e' },
-  { id:'ql-so',       name:'Stack Overflow', url:'https://stackoverflow.com',    color:'#f58025' },
-  { id:'ql-arxiv',    name:'arXiv',          url:'https://arxiv.org',            color:'#b31b1b' },
-  { id:'ql-canva',    name:'Canva',          url:'https://www.canva.com',        color:'#00c4cc' },
-  { id:'ql-notion',   name:'Notion',         url:'https://www.notion.so',        color:'#000'    },
+  { id:'ql-chatgpt',  name:'ChatGPT',  url:'https://chat.openai.com',      color:'#10a37f' },
+  { id:'ql-deepseek', name:'DeepSeek', url:'https://www.deepseek.com',     color:'#4f8ef7' },
+  { id:'ql-kimi',     name:'Kimi',     url:'https://kimi.moonshot.cn',     color:'#6366f1' },
+  { id:'ql-notion',   name:'Notion',   url:'https://www.notion.so',        color:'#000'    },
 ];
 
 const BUILT_IN_CARDS = [
-  { id:'chatgpt',      section:'ai',       name:'ChatGPT',        url:'https://chat.openai.com',            desc:'OpenAI 出品，最强通用 AI 对话',    icon:'🟢', bg:'bg-green'  },
-  { id:'deepseek',     section:'ai',       name:'DeepSeek',       url:'https://www.deepseek.com',            desc:'国产顶尖大模型，免费使用',          icon:'🔵', bg:'bg-blue'   },
-  { id:'kimi',         section:'ai',       name:'Kimi',           url:'https://kimi.moonshot.cn',            desc:'月之暗面，超长上下文 AI',           icon:'🌙', bg:'bg-purple' },
-  { id:'claude',       section:'ai',       name:'Claude',         url:'https://claude.ai',                   desc:'Anthropic 出品，擅长长文写作',      icon:'🟠', bg:'bg-orange' },
-  { id:'gemini',       section:'ai',       name:'Gemini',         url:'https://gemini.google.com',           desc:'Google 多模态大模型',               icon:'♊',  bg:'bg-blue'   },
-  { id:'doubao',       section:'ai',       name:'豆包',           url:'https://www.doubao.com',              desc:'字节跳动 AI 助手，免费好用',        icon:'🫘', bg:'bg-teal'   },
-  { id:'grok',         section:'ai',       name:'Grok',           url:'https://grok.x.ai',                   desc:'xAI 出品 AI 助手',                  icon:'✖',  bg:'bg-red'    },
-  { id:'wenxin',       section:'ai',       name:'文心一言',       url:'https://yiyan.baidu.com',             desc:'百度文心大模型，中文优化',          icon:'🔷', bg:'bg-blue'   },
-  { id:'qianwen',      section:'ai',       name:'通义千问',       url:'https://tongyi.aliyun.com',           desc:'阿里巴巴大模型，多场景应用',        icon:'🟡', bg:'bg-orange' },
-  { id:'perplexity',   section:'ai',       name:'Perplexity',     url:'https://www.perplexity.ai',           desc:'AI 搜索引擎，实时联网',             icon:'🔮', bg:'bg-teal'   },
-  { id:'midjourney',   section:'ai',       name:'Midjourney',     url:'https://www.midjourney.com',          desc:'顶级 AI 绘图工具',                  icon:'🎨', bg:'bg-purple' },
-  { id:'suno',         section:'ai',       name:'Suno',           url:'https://suno.com',                    desc:'AI 音乐生成，一键创作歌曲',         icon:'🎵', bg:'bg-pink'   },
-  { id:'google',       section:'search',   name:'Google',         url:'https://www.google.com',              desc:'全球最大搜索引擎',                  icon:'🌐', bg:'bg-blue'   },
-  { id:'baidu',        section:'search',   name:'百度',           url:'https://www.baidu.com',               desc:'国内最大中文搜索引擎',              icon:'🔵', bg:'bg-blue'   },
-  { id:'bing',         section:'search',   name:'必应 Bing',      url:'https://www.bing.com',                desc:'微软搜索，支持 AI 对话',            icon:'🔷', bg:'bg-blue'   },
-  { id:'duckduckgo',   section:'search',   name:'DuckDuckGo',     url:'https://duckduckgo.com',              desc:'注重隐私的搜索引擎',                icon:'🦆', bg:'bg-orange' },
-  { id:'yahoo',        section:'search',   name:'Yahoo',          url:'https://search.yahoo.com',            desc:'雅虎搜索引擎',                      icon:'🟣', bg:'bg-purple' },
-  { id:'s360',         section:'search',   name:'360搜索',        url:'https://www.so.com',                  desc:'360 出品搜索引擎',                  icon:'🟠', bg:'bg-orange' },
-  { id:'arxiv',        section:'academic', name:'arXiv',          url:'https://arxiv.org',                   desc:'免费预印本论文库',                  icon:'📄', bg:'bg-red'    },
-  { id:'gscholar',     section:'academic', name:'Google Scholar', url:'https://scholar.google.com',          desc:'全球学术搜索平台',                  icon:'🎓', bg:'bg-blue'   },
-  { id:'cnki',         section:'academic', name:'中国知网',       url:'https://www.cnki.net',                desc:'国内最大学术文献平台',              icon:'📕', bg:'bg-blue'   },
-  { id:'wanfang',      section:'academic', name:'万方数据',       url:'https://www.wanfangdata.com.cn',      desc:'中文学术论文数据库',                icon:'📗', bg:'bg-orange' },
-  { id:'semantic',     section:'academic', name:'Semantic Scholar',url:'https://www.semanticscholar.org',   desc:'AI 驱动的学术搜索',                icon:'🔬', bg:'bg-teal'   },
-  { id:'pubmed',       section:'academic', name:'PubMed',         url:'https://pubmed.ncbi.nlm.nih.gov',     desc:'医学生命科学文献库',                icon:'🏥', bg:'bg-green'  },
-  { id:'scidir',       section:'academic', name:'ScienceDirect',  url:'https://www.sciencedirect.com',       desc:'Elsevier 旗下期刊数据库',           icon:'📘', bg:'bg-orange' },
-  { id:'rgate',        section:'academic', name:'ResearchGate',   url:'https://www.researchgate.net',        desc:'学术社交与论文分享平台',            icon:'🌿', bg:'bg-teal'   },
-  { id:'github',       section:'dev',      name:'GitHub',         url:'https://github.com',                  desc:'全球最大代码托管平台',              icon:'🐙', bg:'bg-red'    },
-  { id:'stackoverflow',section:'dev',      name:'Stack Overflow', url:'https://stackoverflow.com',           desc:'程序员问答社区',                    icon:'📚', bg:'bg-orange' },
-  { id:'mdn',          section:'dev',      name:'MDN Web Docs',   url:'https://developer.mozilla.org',       desc:'Web 技术权威文档',                  icon:'🦊', bg:'bg-orange' },
-  { id:'docker',       section:'dev',      name:'Docker',         url:'https://www.docker.com',              desc:'容器化部署工具',                    icon:'🐳', bg:'bg-blue'   },
-  { id:'codepen',      section:'dev',      name:'CodePen',        url:'https://codepen.io',                  desc:'在线前端代码编写与分享',            icon:'✏️', bg:'bg-teal'   },
-  { id:'postman',      section:'dev',      name:'Postman',        url:'https://www.postman.com',             desc:'API 调试与测试工具',               icon:'📮', bg:'bg-orange' },
-  { id:'gitee',        section:'dev',      name:'Gitee 码云',     url:'https://gitee.com',                   desc:'国内代码托管平台',                  icon:'🔴', bg:'bg-red'    },
-  { id:'regex101',     section:'dev',      name:'Regex101',       url:'https://regex101.com',                desc:'在线正则表达式调试',                icon:'🔤', bg:'bg-purple' },
-  { id:'figma',        section:'design',   name:'Figma',          url:'https://www.figma.com',               desc:'协作 UI 设计工具首选',              icon:'🎯', bg:'bg-red'    },
-  { id:'canva',        section:'design',   name:'Canva',          url:'https://www.canva.com',               desc:'在线图形设计平台，简单易用',        icon:'🖼️', bg:'bg-teal'   },
-  { id:'unsplash',     section:'design',   name:'Unsplash',       url:'https://unsplash.com',                desc:'免费高质量图片素材',                icon:'📷', bg:'bg-green'  },
-  { id:'iconfont',     section:'design',   name:'阿里图标库',     url:'https://www.iconfont.cn',             desc:'国内最大矢量图标库',                icon:'🔣', bg:'bg-orange' },
-  { id:'coolors',      section:'design',   name:'Coolors',        url:'https://coolors.co',                  desc:'快速生成配色方案',                  icon:'🎨', bg:'bg-pink'   },
-  { id:'gfonts',       section:'design',   name:'Google Fonts',   url:'https://fonts.google.com',            desc:'免费开源字体库',                    icon:'🔤', bg:'bg-blue'   },
-  { id:'notion',       section:'tools',    name:'Notion',         url:'https://www.notion.so',               desc:'笔记 + 数据库 + 协作一体',          icon:'📒', bg:'bg-yellow' },
-  { id:'gtranslate',   section:'tools',    name:'谷歌翻译',       url:'https://translate.google.com',        desc:'支持 100+ 语言互译',               icon:'🌍', bg:'bg-blue'   },
-  { id:'deepl',        section:'tools',    name:'DeepL',          url:'https://www.deepl.com',               desc:'质量最高的在线翻译工具',            icon:'🔵', bg:'bg-blue'   },
-  { id:'overleaf',     section:'tools',    name:'Overleaf',       url:'https://www.overleaf.com',            desc:'在线 LaTeX 论文编辑器',             icon:'📝', bg:'bg-green'  },
-  { id:'smallpdf',     section:'tools',    name:'SmallPDF',       url:'https://smallpdf.com',                desc:'PDF 在线转换处理工具',              icon:'📄', bg:'bg-red'    },
-  { id:'excalidraw',   section:'tools',    name:'Excalidraw',     url:'https://excalidraw.com',              desc:'手绘风格在线白板工具',              icon:'✍️', bg:'bg-purple' },
+  // AI 工具
+  { id:'chatgpt',      section:'ai',      name:'ChatGPT',        url:'https://chat.openai.com',                         desc:'OpenAI 出品，最强通用 AI 对话',    icon:'🟢', bg:'bg-green'  },
+  { id:'claude',       section:'ai',      name:'Claude',         url:'https://claude.ai',                               desc:'Anthropic 出品，擅长长文写作',     icon:'🟠', bg:'bg-orange' },
+  { id:'gemini',       section:'ai',      name:'Gemini',         url:'https://gemini.google.com',                       desc:'Google 多模态大模型',              icon:'♊',  bg:'bg-blue'   },
+  { id:'grok',         section:'ai',      name:'Grok',           url:'https://grok.x.ai',                               desc:'xAI 出品 AI 助手',                 icon:'✖',  bg:'bg-red'    },
+  { id:'perplexity',   section:'ai',      name:'Perplexity',     url:'https://www.perplexity.ai',                       desc:'AI 搜索引擎，实时联网',            icon:'🔮', bg:'bg-teal'   },
+  // AI工具国内
+  { id:'deepseek',     section:'ai-cn',   name:'Deepseek',       url:'https://www.deepseek.com',                        desc:'国产顶尖大模型，免费使用',         icon:'🔵', bg:'bg-blue'   },
+  { id:'kimi',         section:'ai-cn',   name:'Kimi',           url:'https://kimi.moonshot.cn',                        desc:'月之暗面，超长上下文 AI',          icon:'🌙', bg:'bg-purple' },
+  { id:'doubao',       section:'ai-cn',   name:'豆包',           url:'https://www.doubao.com',                          desc:'字节跳动 AI 助手，免费好用',       icon:'🫘', bg:'bg-teal'   },
+  { id:'qianwen',      section:'ai-cn',   name:'千问',           url:'https://tongyi.aliyun.com',                       desc:'阿里巴巴大模型，多场景应用',       icon:'🟡', bg:'bg-orange' },
+  { id:'minimax',      section:'ai-cn',   name:'Minimax',        url:'https://www.minimax.io',                          desc:'MiniMax 大模型，支持多模态',       icon:'⭕', bg:'bg-blue'   },
+  { id:'qingyan',      section:'ai-cn',   name:'清言',           url:'https://chatglm.cn/main/alltoolsdetail?lang=zh',  desc:'智谱 AI 出品，清言助手',          icon:'💬', bg:'bg-green'  },
+  // API应用
+  { id:'deepseek-api', section:'api',     name:'Deepseek.api',   url:'https://platform.deepseek.com',                  desc:'DeepSeek 开放平台 API',            icon:'🔵', bg:'bg-blue'   },
+  { id:'mineru',       section:'api',     name:'MinerU',         url:'https://mineru.net/',                             desc:'高质量 PDF 解析工具',              icon:'📄', bg:'bg-orange' },
+  { id:'minimax-api',  section:'api',     name:'Minimax API',    url:'https://platform.minimaxi.com',                  desc:'MiniMax 开放平台 API',             icon:'⭕', bg:'bg-teal'   },
+  { id:'kimi-api',     section:'api',     name:'KIMI API',       url:'https://platform.moonshot.cn',                   desc:'月之暗面开放平台 API',             icon:'🌙', bg:'bg-purple' },
+  // 开发工具
+  { id:'github',       section:'dev',     name:'GitHub',         url:'https://github.com',                              desc:'全球最大代码托管平台',             icon:'🐙', bg:'bg-red'    },
+  { id:'docker',       section:'dev',     name:'Docker',         url:'https://www.docker.com',                          desc:'容器化部署工具',                   icon:'🐳', bg:'bg-blue'   },
+  { id:'openai-dev',   section:'dev',     name:'OPENAI开发平台', url:'https://platform.openai.com',                     desc:'OpenAI API 开发者平台',            icon:'🟢', bg:'bg-green'  },
+  // 学术资源
+  { id:'ablesci',      section:'academic',name:'科研通',         url:'https://www.ablesci.com',                         desc:'文献全文免费下载平台',             icon:'🔬', bg:'bg-blue'   },
+  { id:'zlibrary',     section:'academic',name:'Z图书馆',        url:'https://zh.z-library.sk/',                        desc:'全球最大电子书免费下载库',         icon:'📚', bg:'bg-teal'   },
+  // 社交媒体
+  { id:'twitter',      section:'social',  name:'推特',           url:'https://x.com',                                   desc:'全球最大社交媒体平台',             icon:'✖',  bg:'bg-red'    },
+  { id:'zhihu',        section:'social',  name:'知乎',           url:'https://www.zhihu.com',                           desc:'中文问答社区',                     icon:'💬', bg:'bg-blue'   },
 ];
 
 const COLOR_OPTIONS = [
@@ -487,6 +501,7 @@ function saveState() {
   LS.setItem('nh_sec_order',    JSON.stringify(sectionOrder));
   LS.setItem('nh_card_orders',  JSON.stringify(cardOrders));
   LS.setItem('nh_ql_order',     JSON.stringify(qlOrder));
+  triggerSync();
 }
 
 // ── 计算激活列表（带排序） ──
@@ -663,10 +678,6 @@ function renderSidebar() {
   nav.appendChild(addBtn);
 
   sidebar.appendChild(nav);
-  const footer = document.createElement('div');
-  footer.className = 'sidebar-footer';
-  footer.innerHTML = '<button class="btn-reset" onclick="resetToDefault()">↺ 恢复默认</button>';
-  sidebar.appendChild(footer);
 }
 
 /* ── 顶部导航 ── */
@@ -869,15 +880,6 @@ function deleteSection(sectionId) {
   showToast(`已删除分类「${s.label}」`);
 }
 
-function resetToDefault() {
-  if (!confirm('确定要恢复所有默认设置？\n自定义分类、卡片、快捷链接和排序将全部清除。')) return;
-  deletedCardIds.clear(); customCards = [];
-  deletedSectionIds.clear(); customSections = [];
-  deletedQlIds.clear(); customQuicklinks = [];
-  sectionOrder = []; cardOrders = {}; qlOrder = [];
-  saveState(); renderAll();
-  showToast('已恢复默认设置');
-}
 
 // ═══════════════════════════════════════════════════
 //  通用 Favicon 获取
@@ -1143,8 +1145,138 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+// ═══════════════════════════════════════════════════
+//  GitHub 自动同步
+// ═══════════════════════════════════════════════════
+
+const GH_KEY = 'nh_gh_settings';
+let syncTimer = null;
+
+function getGhSettings() {
+  return JSON.parse(localStorage.getItem(GH_KEY) || 'null');
+}
+
+function setSyncStatus(status, msg) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  const map = {
+    syncing: { icon: '⟳ ', color: '#7dd3fc' },
+    ok:      { icon: '✓ ', color: '#86efac' },
+    error:   { icon: '✗ ', color: '#fca5a5' },
+    idle:    { icon: '',   color: '#aaa'     },
+  };
+  const s = map[status] || map.idle;
+  el.textContent = s.icon + (msg || '');
+  el.style.color = s.color;
+}
+
+async function syncToGitHub() {
+  const s = getGhSettings();
+  if (!s || !s.token || !s.owner || !s.repo || !s.path) return;
+  setSyncStatus('syncing', '同步中…');
+  const apiUrl = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${s.path}`;
+  const headers = {
+    Authorization: `token ${s.token}`,
+    Accept: 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+  };
+  try {
+    const getRes = await fetch(apiUrl, { headers });
+    const sha = getRes.ok ? (await getRes.json()).sha : undefined;
+    const stateData = {
+      nh_del_cards:    [...deletedCardIds],
+      nh_custom_cards: customCards,
+      nh_del_secs:     [...deletedSectionIds],
+      nh_custom_secs:  customSections,
+      nh_del_qls:      [...deletedQlIds],
+      nh_custom_qls:   customQuicklinks,
+      nh_sec_order:    sectionOrder,
+      nh_card_orders:  cardOrders,
+      nh_ql_order:     qlOrder,
+    };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(stateData, null, 2))));
+    const body = { message: 'sync nav state', content, branch: s.branch || 'main' };
+    if (sha) body.sha = sha;
+    const putRes = await fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (putRes.ok) {
+      setSyncStatus('ok', '已同步');
+      setTimeout(() => setSyncStatus('idle'), 3000);
+    } else {
+      const err = await putRes.json();
+      setSyncStatus('error', err.message || '同步失败');
+    }
+  } catch(e) {
+    setSyncStatus('error', '网络错误');
+  }
+}
+
+function triggerSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncToGitHub, 1500);
+}
+
+async function loadFromGitHub() {
+  const s = getGhSettings();
+  if (!s || !s.token || !s.owner || !s.repo || !s.path) return;
+  setSyncStatus('syncing', '加载云端…');
+  const rawUrl = `https://raw.githubusercontent.com/${s.owner}/${s.repo}/${s.branch || 'main'}/${s.path}?t=${Date.now()}`;
+  try {
+    const res = await fetch(rawUrl);
+    if (!res.ok) { setSyncStatus('idle'); return; }
+    const data = await res.json();
+    deletedCardIds    = new Set(data.nh_del_cards    || []);
+    customCards       = data.nh_custom_cards          || [];
+    deletedSectionIds = new Set(data.nh_del_secs     || []);
+    customSections    = data.nh_custom_secs           || [];
+    deletedQlIds      = new Set(data.nh_del_qls      || []);
+    customQuicklinks  = data.nh_custom_qls            || [];
+    sectionOrder      = data.nh_sec_order             || [];
+    cardOrders        = data.nh_card_orders           || {};
+    qlOrder           = data.nh_ql_order              || [];
+    // 写入本地缓存（不触发同步）
+    LS.setItem('nh_del_cards',    JSON.stringify([...deletedCardIds]));
+    LS.setItem('nh_custom_cards', JSON.stringify(customCards));
+    LS.setItem('nh_del_secs',     JSON.stringify([...deletedSectionIds]));
+    LS.setItem('nh_custom_secs',  JSON.stringify(customSections));
+    LS.setItem('nh_del_qls',      JSON.stringify([...deletedQlIds]));
+    LS.setItem('nh_custom_qls',   JSON.stringify(customQuicklinks));
+    LS.setItem('nh_sec_order',    JSON.stringify(sectionOrder));
+    LS.setItem('nh_card_orders',  JSON.stringify(cardOrders));
+    LS.setItem('nh_ql_order',     JSON.stringify(qlOrder));
+    setSyncStatus('ok', '已同步');
+    setTimeout(() => setSyncStatus('idle'), 3000);
+  } catch(e) {
+    setSyncStatus('idle');
+  }
+}
+
+function openGhSettings() {
+  const s = getGhSettings() || {};
+  document.getElementById('gh-owner').value  = s.owner  || '';
+  document.getElementById('gh-repo').value   = s.repo   || '';
+  document.getElementById('gh-branch').value = s.branch || 'main';
+  document.getElementById('gh-path').value   = s.path   || 'nav-state.json';
+  document.getElementById('gh-token').value  = s.token  || '';
+  openModal('ghSettingsOverlay');
+}
+
+function saveGhSettingsForm() {
+  const s = {
+    owner:  document.getElementById('gh-owner').value.trim(),
+    repo:   document.getElementById('gh-repo').value.trim(),
+    branch: document.getElementById('gh-branch').value.trim() || 'main',
+    path:   document.getElementById('gh-path').value.trim()   || 'nav-state.json',
+    token:  document.getElementById('gh-token').value.trim(),
+  };
+  if (!s.owner || !s.repo || !s.token) { showToast('用户名、仓库名和 Token 为必填项'); return; }
+  localStorage.setItem(GH_KEY, JSON.stringify(s));
+  closeModal('ghSettingsOverlay');
+  showToast('设置已保存，立即同步中…');
+  syncToGitHub();
+}
+
 // ── 启动 ──
-renderAll();
+loadFromGitHub().then(() => renderAll());
 </script>
 </body>
 </html>
