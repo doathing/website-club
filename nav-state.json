@@ -19,18 +19,10 @@
     }
   ],
   "nh_del_secs": [],
-  "nh_custom_secs": [
-    {
-      "id": "sec_1779085325616",
-      "label": "擦擦",
-      "icon": "⭐",
-      "isCustom": true
-    }
-  ],
+  "nh_custom_secs": [],
   "nh_del_qls": [],
   "nh_custom_qls": [],
   "nh_sec_order": [
-    "sec_1779085325616",
     "ai",
     "search",
     "academic",
