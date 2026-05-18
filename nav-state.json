@@ -5,19 +5,7 @@
     "wenxin",
     "kimi"
   ],
-  "nh_custom_cards": [
-    {
-      "id": "c_1779085208463",
-      "section": "ai",
-      "name": "kimi",
-      "url": "https://www.kimi.com/",
-      "desc": "",
-      "icon": "🔗",
-      "bg": "bg-blue",
-      "iconUrl": "https://icons.duckduckgo.com/ip3/www.kimi.com.ico",
-      "isCustom": true
-    }
-  ],
+  "nh_custom_cards": [],
   "nh_del_secs": [],
   "nh_custom_secs": [],
   "nh_del_qls": [],
@@ -34,7 +22,6 @@
     "ai": [
       "chatgpt",
       "claude",
-      "c_1779085208463",
       "gemini",
       "doubao",
       "grok",
