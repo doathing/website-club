@@ -24,11 +24,11 @@
   "nh_custom_qls": [],
   "nh_sec_order": [
     "ai",
-    "search",
+    "ai-cn",
     "academic",
     "dev",
-    "design",
-    "tools"
+    "api",
+    "social"
   ],
   "nh_card_orders": {
     "ai": [
