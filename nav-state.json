@@ -1,0 +1,66 @@
+{
+  "nh_del_cards": [
+    "suno",
+    "midjourney",
+    "wenxin",
+    "kimi"
+  ],
+  "nh_custom_cards": [
+    {
+      "id": "c_1779085208463",
+      "section": "ai",
+      "name": "kimi",
+      "url": "https://www.kimi.com/",
+      "desc": "",
+      "icon": "🔗",
+      "bg": "bg-blue",
+      "iconUrl": "https://icons.duckduckgo.com/ip3/www.kimi.com.ico",
+      "isCustom": true
+    }
+  ],
+  "nh_del_secs": [],
+  "nh_custom_secs": [
+    {
+      "id": "sec_1779085325616",
+      "label": "擦擦",
+      "icon": "⭐",
+      "isCustom": true
+    }
+  ],
+  "nh_del_qls": [],
+  "nh_custom_qls": [],
+  "nh_sec_order": [
+    "sec_1779085325616",
+    "ai",
+    "search",
+    "academic",
+    "dev",
+    "design",
+    "tools"
+  ],
+  "nh_card_orders": {
+    "ai": [
+      "chatgpt",
+      "claude",
+      "c_1779085208463",
+      "gemini",
+      "doubao",
+      "grok",
+      "qianwen",
+      "perplexity",
+      "deepseek"
+    ]
+  },
+  "nh_ql_order": [
+    "ql-chatgpt",
+    "ql-deepseek",
+    "ql-kimi",
+    "ql-github",
+    "ql-figma",
+    "ql-gtrans",
+    "ql-so",
+    "ql-arxiv",
+    "ql-canva",
+    "ql-notion"
+  ]
+}
