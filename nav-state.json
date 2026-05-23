@@ -68,17 +68,6 @@
       "isCustom": true
     },
     {
-      "id": "c_1779087166414",
-      "section": "sec_1779087138477",
-      "name": "推特",
-      "url": "https://x.com/",
-      "desc": "",
-      "icon": "🔗",
-      "bg": "bg-blue",
-      "iconUrl": "https://icons.duckduckgo.com/ip3/x.com.ico",
-      "isCustom": true
-    },
-    {
       "id": "c_1779087300334",
       "section": "ai",
       "name": "Claude",
@@ -167,17 +156,6 @@
       "isCustom": true
     },
     {
-      "id": "c_1779088088203",
-      "section": "sec_1779087138477",
-      "name": "知乎",
-      "url": "https://www.zhihu.com/",
-      "desc": "",
-      "icon": "🔗",
-      "bg": "bg-blue",
-      "iconUrl": "https://icons.duckduckgo.com/ip3/www.zhihu.com.ico",
-      "isCustom": true
-    },
-    {
       "id": "c_1779088238995",
       "section": "sec_1779087554670",
       "name": "Minimax",
@@ -258,19 +236,15 @@
   "nh_del_secs": [
     "search",
     "tools",
-    "design"
+    "design",
+    "ai-cn",
+    "api"
   ],
   "nh_custom_secs": [
     {
       "id": "sec_1779087017146",
       "label": "API调用",
       "icon": "🔧",
-      "isCustom": true
-    },
-    {
-      "id": "sec_1779087138477",
-      "label": "社交媒体",
-      "icon": "🌍",
       "isCustom": true
     },
     {
@@ -294,8 +268,7 @@
     "sec_1779087554670",
     "sec_1779087017146",
     "dev",
-    "academic",
-    "sec_1779087138477"
+    "academic"
   ],
   "nh_card_orders": {
     "academic": [
