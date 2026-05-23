@@ -156,17 +156,6 @@
       "isCustom": true
     },
     {
-      "id": "c_1779087868126",
-      "section": "academic",
-      "name": "Z图书馆",
-      "url": "https://zh.z-library.sk/",
-      "desc": "",
-      "icon": "🔗",
-      "bg": "bg-blue",
-      "iconUrl": "https://icons.duckduckgo.com/ip3/zh.z-library.sk.ico",
-      "isCustom": true
-    },
-    {
       "id": "c_1779087891659",
       "section": "academic",
       "name": "科研通",
@@ -310,8 +299,7 @@
   ],
   "nh_card_orders": {
     "academic": [
-      "c_1779087891659",
-      "c_1779087868126"
+      "c_1779087891659"
     ]
   },
   "nh_ql_order": [
